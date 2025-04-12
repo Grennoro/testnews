@@ -136,7 +136,7 @@
         </label>
         <label>
           Изображение:
-          <input type="file" id="newsImage" accept="image/*">
+          <input type="file" id="newsImage" accept="image/*" required>
         </label>
         <button type="submit">Опубликовать новость</button>
       </form>
@@ -147,28 +147,24 @@
   <script>
     document.getElementById('newsForm').addEventListener('submit', function(e) {
       e.preventDefault();
+      
+      const title = document.getElementById('newsTitle').value;
+      const content = document.getElementById('newsContent').value;
+      const image = document.getElementById('newsImage').files[0];
 
       const formData = new FormData();
-      formData.append('title', document.getElementById('newsTitle').value);
-      formData.append('content', document.getElementById('newsContent').value);
-      const imageInput = document.getElementById('newsImage');
-      if (imageInput.files.length > 0) {
-        formData.append('image', imageInput.files[0]);
-      }
-
-      fetch('/add-news', {
+      formData.append('title', title);
+      formData.append('content', content);
+      formData.append('image', image);
+      
+      fetch('/api/news', {
         method: 'POST',
-        body: formData
+        body: formData,
       })
       .then(response => response.json())
       .then(data => {
-        if (data.success) {
-          alert('Новость добавлена!');
-          document.getElementById('newsForm').reset();
-          renderNews();
-        } else {
-          alert('Ошибка при добавлении новости');
-        }
+        console.log('Новость добавлена:', data);
+        renderNews();
       })
       .catch(error => {
         console.error('Ошибка:', error);
@@ -176,31 +172,26 @@
     });
 
     function renderNews() {
-      fetch('/news.json')
+      fetch('/api/news')
         .then(response => response.json())
-        .then(newsArray => {
+        .then(data => {
           const newsList = document.getElementById('newsList');
           newsList.innerHTML = '';
-          if (newsArray.length === 0) {
-            newsList.innerHTML = '<p>Нет новостей.</p>';
-            return;
-          }
-
-          newsArray.forEach(function(item) {
+          data.forEach(news => {
             const div = document.createElement('div');
-            div.className = 'news-item';
+            div.classList.add('news-item');
             div.innerHTML = `
-              <h3>${item.title}</h3>
-              <small>${item.date}</small>
-              <p>${item.content}</p>
-              ${item.image ? `<img src="${item.image}" alt="image" style="width: 100%; max-width: 300px; margin-top: 10px;" />` : ''}
+              <h3>${news.title}</h3>
+              <small>${news.date}</small>
+              <p>${news.content}</p>
+              ${news.image ? `<img src="${news.image}" alt="${news.title}" style="width: 100px; height: auto;">` : ''}
             `;
             newsList.appendChild(div);
           });
-        });
+        })
+        .catch(error => console.error('Ошибка при загрузке новостей:', error));
     }
 
-    // Инициализация
     renderNews();
   </script>
 </body>
