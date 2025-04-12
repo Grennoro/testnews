@@ -125,7 +125,7 @@
         <h1>Управление новостями</h1>
       </header>
       <a class="back-link" href="admin.html">&larr; Назад к панели</a>
-      <form id="newsForm">
+      <form id="newsForm" enctype="multipart/form-data">
         <label>
           Заголовок:
           <input type="text" id="newsTitle" required>
@@ -134,6 +134,10 @@
           Содержание:
           <textarea id="newsContent" rows="4" required></textarea>
         </label>
+        <label>
+          Изображение:
+          <input type="file" id="newsImage" accept="image/*">
+        </label>
         <button type="submit">Опубликовать новость</button>
       </form>
       <div class="news-list" id="newsList"></div>
@@ -141,47 +145,62 @@
   </div>
   
   <script>
-    
-    
     document.getElementById('newsForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      var title = document.getElementById('newsTitle').value;
-      var content = document.getElementById('newsContent').value;
-      var newsItem = {
-        title: title,
-        content: content,
-        date: new Date().toLocaleString()
-      };
-      
-      var newsArray = JSON.parse(localStorage.getItem('news')) || [];
-      newsArray.push(newsItem);
-      localStorage.setItem('news', JSON.stringify(newsArray));
-      
-      document.getElementById('newsForm').reset();
-      renderNews();
-    });
-    
-    function renderNews() {
-      var newsArray = JSON.parse(localStorage.getItem('news')) || [];
-      var newsList = document.getElementById('newsList');
-      newsList.innerHTML = '';
-      if(newsArray.length === 0) {
-        newsList.innerHTML = '<p>Нет новостей.</p>';
-        return;
+
+      const formData = new FormData();
+      formData.append('title', document.getElementById('newsTitle').value);
+      formData.append('content', document.getElementById('newsContent').value);
+      const imageInput = document.getElementById('newsImage');
+      if (imageInput.files.length > 0) {
+        formData.append('image', imageInput.files[0]);
       }
-      
-      // Отобразим новости в обратном порядке
-      newsArray.slice().reverse().forEach(function(item) {
-        var div = document.createElement('div');
-        div.className = 'news-item';
-        div.innerHTML = '<h3>' + item.title + '</h3><small>' + item.date + '</small><p>' + item.content + '</p>';
-        newsList.appendChild(div);
+
+      fetch('/add-news', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Новость добавлена!');
+          document.getElementById('newsForm').reset();
+          renderNews();
+        } else {
+          alert('Ошибка при добавлении новости');
+        }
+      })
+      .catch(error => {
+        console.error('Ошибка:', error);
       });
+    });
+
+    function renderNews() {
+      fetch('/news.json')
+        .then(response => response.json())
+        .then(newsArray => {
+          const newsList = document.getElementById('newsList');
+          newsList.innerHTML = '';
+          if (newsArray.length === 0) {
+            newsList.innerHTML = '<p>Нет новостей.</p>';
+            return;
+          }
+
+          newsArray.forEach(function(item) {
+            const div = document.createElement('div');
+            div.className = 'news-item';
+            div.innerHTML = `
+              <h3>${item.title}</h3>
+              <small>${item.date}</small>
+              <p>${item.content}</p>
+              ${item.image ? `<img src="${item.image}" alt="image" style="width: 100%; max-width: 300px; margin-top: 10px;" />` : ''}
+            `;
+            newsList.appendChild(div);
+          });
+        });
     }
-    
-    
-    
-    // Инициализируем отображение новостей
+
+    // Инициализация
     renderNews();
   </script>
 </body>
