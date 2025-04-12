@@ -1,5 +1,8 @@
 {
   "name": "testnews",
   "version": "1.0.0",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "bcrypt": "^5.1.0"
+  }
 }
