@@ -141,10 +141,7 @@
   </div>
   
   <script>
-    // Проверка аутентификации
-    if(localStorage.getItem('authenticated') !== 'true'){
-      window.location.href = 'login.html';
-    }
+    
     
     document.getElementById('newsForm').addEventListener('submit', function(e) {
       e.preventDefault();
@@ -182,10 +179,7 @@
       });
     }
     
-    function logout() {
-      localStorage.removeItem('authenticated');
-      window.location.href = 'login.html';
-    }
+    
     
     // Инициализируем отображение новостей
     renderNews();
