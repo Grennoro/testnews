@@ -1,6 +1,5 @@
 {
   "rewrites": [
-    { "source": "/login", "destination": "/api/login" }, 
-    {"source": "/add-news", "destination": "/api/news"}
+    { "source": "/login", "destination": "/api/login" }
   ]
 }
