@@ -13,14 +13,14 @@ export default async function handler(req, res) {
     const user = users.find(user => user.username === username);
 
     if (!user) {
-      return res.status(401).json({ success: false, message: 'Неверный логин' });
+      return res.status(401).json({ success: false, message: 'Неверный логин или пароль' });
     }
 
     const match = await bcrypt.compare(password, user.password);
     if (match) {
       res.status(200).json({ success: true });
     } else {
-      res.status(401).json({ success: false, message: 'Неверный пароль' });
+      res.status(401).json({ success: false, message: 'Неверный логин или пароль' });
     }
   } else {
     res.status(405).json({ message: 'Метод не разрешён' });
