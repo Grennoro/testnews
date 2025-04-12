@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Админ панель</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f7f9;
+    }
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+    .sidebar {
+      width: 220px;
+      background: #2c3e50;
+      color: #ecf0f1;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .sidebar h2 {
+      margin-top: 0;
+      font-size: 22px;
+      text-align: center;
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 20px 0;
+    }
+    .sidebar ul li {
+      padding: 12px 10px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+    .sidebar ul li:hover {
+      background: #34495e;
+    }
+    .content {
+      flex: 1;
+      padding: 40px;
+      box-sizing: border-box;
+    }
+    header {
+      margin-bottom: 30px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 32px;
+      color: #333;
+    }
+    .logout {
+      margin-top: 20px;
+      text-align: center;
+      cursor: pointer;
+      color: #e74c3c;
+      font-weight: bold;
+    }
+    .logout:hover {
+      text-decoration: underline;
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="sidebar">
+      <h2>Админ панель</h2>
+      <ul>
+        <li onclick="showDashboard()">Панель управления</li>
+        <li onclick="window.location.href='news.html'">Новости</li>
+      </ul>
+      <div class="logout" onclick="logout()">Выход</div>
+    </div>
+    <div class="content">
+      <header>
+        <h1 id="pageTitle">Панель управления</h1>
+      </header>
+      <div id="dashboardContent">
+        <p>Добро пожаловать, администратор! Здесь вы можете управлять вашим сайтом.</p>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Проверка аутентификации
+    if(localStorage.getItem('authenticated') !== 'true'){
+      window.location.href = 'login.html';
+    }
+    
+    function showDashboard() {
+      document.getElementById('pageTitle').innerText = 'Панель управления';
+      document.getElementById('dashboardContent').innerHTML = '<p>Добро пожаловать, администратор! Здесь вы можете управлять вашим сайтом.</p>';
+    }
+    
+    function logout() {
+      localStorage.removeItem('authenticated');
+      window.location.href = 'login.html';
+    }
+  </script>
+</body>
+</html>
