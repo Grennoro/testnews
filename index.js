@@ -1,26 +1,26 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs');
 const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Разрешить отдавать статические файлы из текущей директории
+app.use(express.static(__dirname));
 app.use(bodyParser.json());
-app.use(express.static('public'));
 
-// Логин
+// Обработка логина
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
 
-  const users = JSON.parse(fs.readFileSync('users.json', 'utf8'));
-  if (username === users.username && password === users.password) {
-    res.sendStatus(200); // логин прошел
+  if (username === 'admin' && password === 'admin') {
+    res.status(200).json({ success: true });
   } else {
-    res.sendStatus(401); // ошибка авторизации
+    res.status(401).json({ success: false, message: 'Неверный логин или пароль' });
   }
 });
 
+// Запуск сервера
 app.listen(PORT, () => {
   console.log(`Сервер запущен на http://localhost:${PORT}`);
 });
