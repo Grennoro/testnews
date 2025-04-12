@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Новости - Админ панель</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f7f9;
+    }
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+    .sidebar {
+      width: 220px;
+      background: #2c3e50;
+      color: #ecf0f1;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .sidebar h2 {
+      margin-top: 0;
+      font-size: 22px;
+      text-align: center;
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 20px 0;
+    }
+    .sidebar ul li {
+      padding: 12px 10px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+    .sidebar ul li:hover {
+      background: #34495e;
+    }
+    .content {
+      flex: 1;
+      padding: 40px;
+      box-sizing: border-box;
+    }
+    header {
+      margin-bottom: 30px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 32px;
+      color: #333;
+    }
+    .logout {
+      margin-top: 20px;
+      text-align: center;
+      cursor: pointer;
+      color: #e74c3c;
+      font-weight: bold;
+    }
+    .logout:hover {
+      text-decoration: underline;
+    }
+    form label {
+      display: block;
+      margin-bottom: 10px;
+    }
+    form input[type="text"],
+    form textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    form button {
+      background: #667eea;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    form button:hover {
+      background: #556cd6;
+    }
+    .news-list {
+      margin-top: 30px;
+    }
+    .news-item {
+      background: #fff;
+      padding: 15px;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    .news-item h3 {
+      margin: 0 0 10px;
+    }
+    .back-link {
+      margin-bottom: 20px;
+      display: inline-block;
+      color: #667eea;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="sidebar">
+      <h2>Админ панель</h2>
+      <ul>
+        <li onclick="window.location.href='admin.html'">Панель управления</li>
+        <li onclick="location.reload()">Новости</li>
+      </ul>
+      <div class="logout" onclick="logout()">Выход</div>
+    </div>
+    <div class="content">
+      <header>
+        <h1>Управление новостями</h1>
+      </header>
+      <a class="back-link" href="admin.html">&larr; Назад к панели</a>
+      <form id="newsForm">
+        <label>
+          Заголовок:
+          <input type="text" id="newsTitle" required>
+        </label>
+        <label>
+          Содержание:
+          <textarea id="newsContent" rows="4" required></textarea>
+        </label>
+        <button type="submit">Опубликовать новость</button>
+      </form>
+      <div class="news-list" id="newsList"></div>
+    </div>
+  </div>
+  
+  <script>
+    // Проверка аутентификации
+    if(localStorage.getItem('authenticated') !== 'true'){
+      window.location.href = 'login.html';
+    }
+    
+    document.getElementById('newsForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var title = document.getElementById('newsTitle').value;
+      var content = document.getElementById('newsContent').value;
+      var newsItem = {
+        title: title,
+        content: content,
+        date: new Date().toLocaleString()
+      };
+      
+      var newsArray = JSON.parse(localStorage.getItem('news')) || [];
+      newsArray.push(newsItem);
+      localStorage.setItem('news', JSON.stringify(newsArray));
+      
+      document.getElementById('newsForm').reset();
+      renderNews();
+    });
+    
+    function renderNews() {
+      var newsArray = JSON.parse(localStorage.getItem('news')) || [];
+      var newsList = document.getElementById('newsList');
+      newsList.innerHTML = '';
+      if(newsArray.length === 0) {
+        newsList.innerHTML = '<p>Нет новостей.</p>';
+        return;
+      }
+      
+      // Отобразим новости в обратном порядке
+      newsArray.slice().reverse().forEach(function(item) {
+        var div = document.createElement('div');
+        div.className = 'news-item';
+        div.innerHTML = '<h3>' + item.title + '</h3><small>' + item.date + '</small><p>' + item.content + '</p>';
+        newsList.appendChild(div);
+      });
+    }
+    
+    function logout() {
+      localStorage.removeItem('authenticated');
+      window.location.href = 'login.html';
+    }
+    
+    // Инициализируем отображение новостей
+    renderNews();
+  </script>
+</body>
+</html>
