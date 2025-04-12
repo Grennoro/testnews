@@ -3,10 +3,6 @@
     {
       "username": "admin",
       "password": "admin"
-    },
-    {
-      "username": "editor",
-      "password": "123456"
     }
   ]
 }
