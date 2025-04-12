@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Новости</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f7f9;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    header h1 {
+      font-size: 36px;
+      color: #333;
+    }
+    .news-item {
+      background: #fff;
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .news-item img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+    .news-item h2 {
+      font-size: 28px;
+      color: #333;
+      margin-top: 20px;
+    }
+    .news-item p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #555;
+    }
+    .news-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: space-between;
+    }
+    .news-list .news-item {
+      width: calc(33% - 20px);
+    }
+    @media (max-width: 768px) {
+      .news-list .news-item {
+        width: calc(50% - 20px);
+      }
+    }
+    @media (max-width: 480px) {
+      .news-list .news-item {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Новости сайта</h1>
+    </header>
+    <div class="news-list">
+      <!-- Новости будут динамически добавляться сюда -->
+      <div class="news-item">
+        <img src="https://via.placeholder.com/800x400" alt="Новость 1">
+        <h2>Заголовок новости 1</h2>
+        <p>Описание новости 1. Здесь будет краткое содержание новости. Это описание может быть расширено, чтобы читатель мог получить общую информацию о содержании новости.</p>
+      </div>
+      <div class="news-item">
+        <img src="https://via.placeholder.com/800x400" alt="Новость 2">
+        <h2>Заголовок новости 2</h2>
+        <p>Описание новости 2. Здесь будет краткое содержание новости. Это описание может быть расширено, чтобы читатель мог получить общую информацию о содержании новости.</p>
+      </div>
+      <div class="news-item">
+        <img src="https://via.placeholder.com/800x400" alt="Новость 3">
+        <h2>Заголовок новости 3</h2>
+        <p>Описание новости 3. Здесь будет краткое содержание новости. Это описание может быть расширено, чтобы читатель мог получить общую информацию о содержании новости.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
